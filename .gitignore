@@ -1,0 +1,42 @@
+# Dart / Flutter
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# macOS
+.DS_Store
+
+# Flutter generated files
+**/Flutter/ephemeral/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+
+# CocoaPods generated files
+ios/Pods/
+
+# Xcode user and build data
+**/xcuserdata/
+DerivedData/
+
+# Logs and temporary backups
+*.log
+*.bak
+
+# Local environment and secrets
+.env
+.env.*
+*.key
+*.pem
+*.secret
+*credentials*
+API_KEY*
+api_key*
