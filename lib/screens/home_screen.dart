@@ -1,26 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 import '../components/veggie_status_card.dart';
 import '../components/civilization_map_card.dart';
 import '../components/mission_card.dart';
+import '../data/home_task_state.dart';
 
 /// 首页 Dashboard
 ///
-/// ┌──────────────────────────────────────────────────────────┐
-/// │  Welcome Header              [Veggie Status]        │
-/// ├──────────────────────────────────────────────────────────┤
-/// │                                                          │
-/// │              Civilization Map Card                        │
-/// │         (古地图背景 + 文明节点 + 连接线)                  │
-/// │                                                          │
-/// ├──────────────────────────────────────────────────────────┤
-/// │  Mission 1    │  Mission 2    │  Mission 3              │
-/// └──────────────────────────────────────────────────────────┘
-class HomeScreen extends StatelessWidget {
+/// ┌─────────────────────────────────────────────────────────────┐
+/// │  Welcome Header                     [Veggie Status]        │
+/// ├─────────────────────────────────────────────────────────────┤
+/// │                                                             │
+/// │              Civilization Map Card                           │
+/// │         (古地图背景 + 文明节点 + 连接线)                      │
+/// │                                                             │
+/// ├─────────────────────────────────────────────────────────────┤
+/// │  今日任务区域                                                │
+/// │  ┌──────┐  ┌──────┐  ┌──────┐                              │
+/// │  │ 地图  │  │ 阅读  │  │Mission│                             │
+/// │  └──────┘  └──────┘  └──────┘                              │
+/// └─────────────────────────────────────────────────────────────┘
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mapStatus = ref.watch(homeMapTaskStatusProvider);
+    final readingStatus = ref.watch(homeReadingTaskStatusProvider);
+    final missionStatus = ref.watch(homeMissionTaskStatusProvider);
+    final recommendedTask = ref.watch(currentRecommendedHomeTaskProvider);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -45,7 +56,14 @@ class HomeScreen extends StatelessWidget {
               // ═══════════════════════════════════════════
               //  3. 今日任务区域
               // ═══════════════════════════════════════════
-              _buildMissionsSection(),
+              _buildMissionsSection(
+                context,
+                ref,
+                mapStatus,
+                readingStatus,
+                missionStatus,
+                recommendedTask,
+              ),
             ],
           ),
         ),
@@ -60,7 +78,6 @@ class HomeScreen extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 左侧：品牌 + 问候
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,7 +105,6 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        // 右侧：Veggie 状态卡
         const VeggieStatusCard(),
       ],
     );
@@ -101,7 +117,6 @@ class HomeScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── 区域标题行 ──
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Row(
@@ -129,7 +144,6 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        // ── 地图卡片 ──
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
@@ -143,7 +157,41 @@ class HomeScreen extends StatelessWidget {
   // ─────────────────────────────────────────────────────────────
   //  今日任务
   // ─────────────────────────────────────────────────────────────
-  Widget _buildMissionsSection() {
+  Widget _buildMissionsSection(
+    BuildContext context,
+    WidgetRef ref,
+    HomeCivilizationTaskStatus mapStatus,
+    HomeCivilizationTaskStatus readingStatus,
+    HomeCivilizationTaskStatus missionStatus,
+    int? recommendedTask,
+  ) {
+    final cards = MissionItem.todayMissions.map((m) {
+      final status = m.id == 1
+          ? mapStatus
+          : m.id == 2
+              ? readingStatus
+              : missionStatus;
+      final isRecommended = recommendedTask == m.id;
+      VoidCallback? onTap;
+      switch (m.id) {
+        case 1:
+          onTap = () => context.go('/world-map',
+              extra: <String, dynamic>{'focusRegionId': 'caucasus'});
+        case 2:
+          onTap = () => context.go('/reading-camp',
+              extra: <String, dynamic>{'focusChapter': 26});
+        case 3:
+          onTap = () => context.go('/mission');
+      }
+      return MissionCard(
+        key: ValueKey('home-mission-$m.id'),
+        mission: m,
+        status: status,
+        isRecommended: isRecommended,
+        onTap: onTap,
+      );
+    }).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -170,9 +218,6 @@ class HomeScreen extends StatelessWidget {
         LayoutBuilder(
           builder: (context, constraints) {
             final w = constraints.maxWidth;
-            final cards = MissionItem.todayMissions
-                .map((m) => MissionCard(mission: m))
-                .toList();
             if (w >= 800) {
               return SizedBox(
                 height: 120,

@@ -1,12 +1,13 @@
 {
-    "name": "civilization_map_hd",
-    "short_name": "civilization_map_hd",
+    "name": "文明的地图 HD",
+    "short_name": "文明的地图",
+    "description": "通过地图探索、证据收集和 AI 引导思考，培养文明解释能力。",
     "start_url": ".",
+    "scope": "/",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "orientation": "landscape-primary",
+    "background_color": "#071C2C",
+    "theme_color": "#071C2C",
     "prefer_related_applications": false,
     "icons": [
         {

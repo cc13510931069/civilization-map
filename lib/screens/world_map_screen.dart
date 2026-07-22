@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 import '../data/map_state.dart';
 import '../models/civilization_region.dart';
@@ -41,6 +42,30 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
     ref.read(selectedRegionProvider.notifier).state = null;
   }
 
+  void _handleNavigationIntent(BuildContext context, WidgetRef ref) {
+    try {
+      final routerState = GoRouterState.of(context);
+      final extra = routerState.extra;
+      if (extra is Map<String, dynamic>) {
+        final focusId = extra['focusRegionId'] as String?;
+        if (focusId != null) {
+          final region = CivilizationRegion.worldMap
+              .cast<CivilizationRegion?>()
+              .firstWhere((r) => r?.id == focusId, orElse: () => null);
+          if (region != null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (ref.read(selectedRegionProvider)?.id != focusId) {
+                ref.read(selectedRegionProvider.notifier).state = region;
+              }
+            });
+          }
+        }
+      }
+    } catch (_) {
+      // GoRouter context may not be available in test environments
+    }
+  }
+
   /// 自适应计算信息卡安全位置
   /// 根据节点屏幕位置 + 卡片尺寸，尝试右侧/左侧/上方/下方，
   /// 最终坐标 clamp 在 viewport 安全区域内。
@@ -78,6 +103,8 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _handleNavigationIntent(context, ref);
+    if (!mounted) return const SizedBox();
     final selectedRegion = ref.watch(selectedRegionProvider);
     final nodeScreenPos = ref.watch(nodeScreenPositionProvider);
 
