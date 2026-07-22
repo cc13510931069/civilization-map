@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../models/ai_feedback.dart';
+import 'veggie_speaker_button.dart';
 
 /// AI 导师反馈卡片
 ///
@@ -35,13 +36,16 @@ class AiFeedbackCard extends StatelessWidget {
               child: const Icon(Icons.pets, color: AppTheme.gold, size: 16),
             ),
             const SizedBox(width: 8),
-            Text('Veggie · 文明导师',
-                style: TextStyle(
-                  color: AppTheme.paper,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'PingFang SC',
-                )),
+            Expanded(
+              child: Text('Veggie · 文明导师',
+                  style: TextStyle(
+                    color: AppTheme.paper,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'PingFang SC',
+                  )),
+            ),
+            VeggieSpeakerButton(text: feedback.discovery),
           ]),
           const SizedBox(height: 16),
 

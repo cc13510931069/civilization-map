@@ -12,6 +12,7 @@ import '../components/mission_evidence_library.dart';
 import '../data/mission_state.dart';
 import '../components/final_submission_readiness_card.dart';
 import '../services/step_coaching_service.dart';
+import '../components/veggie_speaker_button.dart';
 
 /// 文明思考实验室 — 双栏布局
 ///
@@ -569,12 +570,15 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
           Row(children: [
             Icon(Icons.pets, color: AppTheme.gold, size: 18),
             const SizedBox(width: 8),
-            Text('Veggie · 本地练习反馈',
-                style: TextStyle(
-                  color: AppTheme.gold,
-                  fontSize: 12,
-                  fontFamily: 'PingFang SC',
-                )),
+            Expanded(
+              child: Text('Veggie · AI 导师反馈',
+                  style: TextStyle(
+                    color: AppTheme.gold,
+                    fontSize: 12,
+                    fontFamily: 'PingFang SC',
+                  )),
+            ),
+            VeggieSpeakerButton(text: sub.initialFeedbackText ?? ''),
           ]),
           const SizedBox(height: 10),
           Text(
