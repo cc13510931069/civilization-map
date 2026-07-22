@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 /// 配色：深蓝背景、金色点缀、纸质暖白文字、绿色辅助
 /// 字体偏好：PingFang SC（iOS 系统中文）→ 系统后备
 import '../theme/app_typography.dart';
+import '../theme/app_fonts.dart';
 
 
 class AppTheme {
@@ -45,7 +46,7 @@ class AppTheme {
       brightness: Brightness.dark,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: background,
-      fontFamily: 'PingFang SC',
+      fontFamily: appFontFamily,
 
       // ── AppBar ──
       appBarTheme: AppBarTheme(
@@ -58,7 +59,7 @@ class AppTheme {
           color: paper,
           fontSize: 18,
           fontWeight: FontWeight.w600,
-          fontFamily: 'PingFang SC',
+          fontFamily: appFontFamily,
         ),
       ),
 
@@ -73,43 +74,20 @@ class AppTheme {
             return TextStyle(
               color: gold,
               fontSize: 12,
-              fontFamily: 'PingFang SC',
+              fontFamily: appFontFamily,
             );
           }
           return TextStyle(
             color: paper.withAlpha(180),
             fontSize: 12,
-            fontFamily: 'PingFang SC',
+            fontFamily: appFontFamily,
           );
         }),
       ),
 
       // ── 文本主题 ──
-      textTheme: TextTheme(
-        displayLarge:
-            _txt(color: paper, weight: FontWeight.w300, size: t.display),
-        displayMedium:
-            _txt(color: paper, weight: FontWeight.w300, size: t.title1),
-        displaySmall:
-            _txt(color: paper, weight: FontWeight.w400, size: t.title1),
-        headlineLarge:
-            _txt(color: paper, weight: FontWeight.w600, size: t.title1),
-        headlineMedium:
-            _txt(color: paper, weight: FontWeight.w600, size: t.title1),
-        headlineSmall:
-            _txt(color: paper, weight: FontWeight.w600, size: t.title2),
-        titleLarge: _txt(color: paper, weight: FontWeight.w600, size: t.title1),
-        titleMedium:
-            _txt(color: paper, weight: FontWeight.w500, size: t.cardTitle),
-        titleSmall: _txt(color: paper, weight: FontWeight.w500, size: t.body),
-        bodyLarge: _txt(color: paper, weight: FontWeight.w400, size: t.body),
-        bodyMedium: _txt(color: paper, weight: FontWeight.w400, size: t.label),
-        bodySmall: _txt(color: paper, weight: FontWeight.w400, size: t.caption),
-        labelLarge: _txt(color: paper, weight: FontWeight.w500, size: t.button),
-        labelMedium: _txt(color: paper, weight: FontWeight.w500, size: t.label),
-        labelSmall:
-            _txt(color: paper, weight: FontWeight.w500, size: t.caption),
-      ),
+      textTheme: _buildTextTheme(t),
+      
 
       // ── 分隔线 ──
       dividerTheme: DividerThemeData(
@@ -147,10 +125,39 @@ class AppTheme {
     required double size,
   }) {
     return TextStyle(
-      fontFamily: 'PingFang SC',
+      fontFamily: appFontFamily,
       color: color,
       fontWeight: weight,
       fontSize: size,
     );
+  }
+
+  static TextTheme _buildTextTheme(AppTypography t) {
+    final base = TextTheme(
+      displayLarge:
+          _txt(color: paper, weight: FontWeight.w300, size: t.display),
+      displayMedium:
+          _txt(color: paper, weight: FontWeight.w300, size: t.title1),
+      displaySmall:
+          _txt(color: paper, weight: FontWeight.w400, size: t.title1),
+      headlineLarge:
+          _txt(color: paper, weight: FontWeight.w600, size: t.title1),
+      headlineMedium:
+          _txt(color: paper, weight: FontWeight.w600, size: t.title1),
+      headlineSmall:
+          _txt(color: paper, weight: FontWeight.w600, size: t.title2),
+      titleLarge: _txt(color: paper, weight: FontWeight.w600, size: t.title1),
+      titleMedium:
+          _txt(color: paper, weight: FontWeight.w500, size: t.cardTitle),
+      titleSmall: _txt(color: paper, weight: FontWeight.w500, size: t.body),
+      bodyLarge: _txt(color: paper, weight: FontWeight.w400, size: t.body),
+      bodyMedium: _txt(color: paper, weight: FontWeight.w400, size: t.label),
+      bodySmall: _txt(color: paper, weight: FontWeight.w400, size: t.caption),
+      labelLarge: _txt(color: paper, weight: FontWeight.w500, size: t.button),
+      labelMedium: _txt(color: paper, weight: FontWeight.w500, size: t.label),
+      labelSmall:
+          _txt(color: paper, weight: FontWeight.w500, size: t.caption),
+    );
+    return base;
   }
 }

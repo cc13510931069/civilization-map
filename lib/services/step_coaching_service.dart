@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'ai_proxy_service.dart';
 import '../models/mission_result_snapshot.dart';
 
 // ── Single-step coaching data classes ──
@@ -275,8 +276,59 @@ class FakeStepCoachingService implements StepCoachingService {
   }
 }
 
+
+/// 远程单步辅导服务（调用 DeepSeek API）
+class RemoteStepCoachingService implements StepCoachingService {
+  final AiProxyService _proxy;
+
+  RemoteStepCoachingService({AiProxyService? proxy})
+      : _proxy = proxy ?? AiProxyService();
+
+  @override
+  Future<StepCoachingFeedback> evaluateStep({
+    required int step,
+    required String question,
+    required String answer,
+    required List<StepCoachingEvidence> evidence,
+    required int revisionNumber,
+  }) async {
+    try {
+      final evMap = evidence.map((e) => {'type': e.type, 'text': e.text}).toList();
+      final req = StepCoachingRequest(
+        step: step,
+        question: question,
+        answer: answer,
+        evidence: evMap,
+      );
+      final resp = await _proxy.stepCoaching(req);
+      return StepCoachingFeedback(
+        step: step,
+        discovery: resp.feedbackText,
+        improvement: '',
+        nextPrompt: '',
+      );
+    } catch (_) {
+      return LocalStepCoachingService().evaluateStep(
+        step: step,
+        question: question,
+        answer: answer,
+        evidence: evidence,
+        revisionNumber: revisionNumber,
+      );
+    }
+  }
+
+  @override
+  StepHint getHint({required int step, required int hintLevel}) {
+    return LocalStepCoachingService().getHint(step: step, hintLevel: hintLevel);
+  }
+}
+
 // ── Provider ──
 
 final stepCoachingServiceProvider = Provider<StepCoachingService>((ref) {
+  if (AiProxyConfig.isConfigured) {
+    return RemoteStepCoachingService();
+  }
   return LocalStepCoachingService();
 });

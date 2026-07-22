@@ -1,0 +1,6 @@
+{
+  "name": "veggie-ai-api",
+  "version": "1.0.0",
+  "description": "Veggie AI 文明探索导师 — DeepSeek 代理 API",
+  "private": true
+}

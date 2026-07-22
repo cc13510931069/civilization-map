@@ -22,7 +22,16 @@ jobs:
           channel: 'stable'
 
       - name: Build web
-        run: flutter build web --release --base-href=/civilization-map/
+        shell: bash
+        run: |
+          FLAGS="--release --base-href=/civilization-map/"
+          if [ -n "${{ secrets.VEGGIE_API_URL }}" ]; then
+            FLAGS="$FLAGS --dart-define=VEGGIE_API_URL=${{ secrets.VEGGIE_API_URL }}"
+            echo "✅ AI API URL configured: ${{ secrets.VEGGIE_API_URL }}"
+          else
+            echo "ℹ️  VEGGIE_API_URL 未设置，使用本地模拟 AI"
+          fi
+          flutter build web $FLAGS
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
