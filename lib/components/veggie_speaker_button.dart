@@ -6,8 +6,6 @@ library;
 
 import 'package:flutter/material.dart';
 import '../services/edge_tts_service.dart';
-import 'dart:typed_bytes';
-import '../services/audio_player.dart';
 import '../theme/app_theme.dart';
 
 enum _TtsState { idle, loading, success, error }
