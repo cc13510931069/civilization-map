@@ -1,0 +1,36 @@
+{
+    "name": "文明的地图 HD",
+    "short_name": "文明的地图",
+    "description": "通过地图探索、证据收集和 AI 引导思考，培养文明解释能力。",
+    "start_url": ".",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "landscape-primary",
+    "background_color": "#071C2C",
+    "theme_color": "#071C2C",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
