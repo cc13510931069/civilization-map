@@ -25,11 +25,11 @@ jobs:
         shell: bash
         run: |
           FLAGS="--release --base-href=/civilization-map/"
-          if [ -n "${{ secrets.VEGGIE_API_URL }}" ]; then
-            FLAGS="$FLAGS --dart-define=VEGGIE_API_URL=${{ secrets.VEGGIE_API_URL }}"
-            echo "✅ AI API URL configured: ${{ secrets.VEGGIE_API_URL }}"
+          if [ -n "${{ secrets.DEEPSEEK_API_KEY }}" ]; then
+            FLAGS="$FLAGS --dart-define=DEEPSEEK_API_KEY=${{ secrets.DEEPSEEK_API_KEY }}"
+            echo "✅ DeepSeek API Key injected"
           else
-            echo "ℹ️  VEGGIE_API_URL 未设置，使用本地模拟 AI"
+            echo "ℹ️  DEEPSEEK_API_KEY 未设置，使用本地模拟 AI"
           fi
           flutter build web $FLAGS
 
