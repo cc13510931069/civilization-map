@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'ai_proxy_service.dart';
+import 'dart:math' as math;
 import '../models/ai_feedback.dart';
 import '../models/mission_evaluation.dart';
 import '../models/civilization_reasoning_profile.dart';

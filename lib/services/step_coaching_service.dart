@@ -279,10 +279,10 @@ class FakeStepCoachingService implements StepCoachingService {
 
 /// 远程单步辅导服务（调用 DeepSeek API）
 class RemoteStepCoachingService implements StepCoachingService {
-  final AiProxyService _proxy;
+  final DeepSeekService _deepSeek;
 
-  RemoteStepCoachingService({AiProxyService? proxy})
-      : _proxy = proxy ?? AiProxyService();
+  RemoteStepCoachingService({DeepSeekService? deepSeek})
+      : _deepSeek = deepSeek ?? DeepSeekService();
 
   @override
   Future<StepCoachingFeedback> evaluateStep({
@@ -294,16 +294,21 @@ class RemoteStepCoachingService implements StepCoachingService {
   }) async {
     try {
       final evMap = evidence.map((e) => {'type': e.type, 'text': e.text}).toList();
-      final req = StepCoachingRequest(
-        step: step,
-        question: question,
-        answer: answer,
-        evidence: evMap,
+      final prompt = VeggiePrompts.stepCoachingPrompt(
+        step: step, question: question, answer: answer, evidence: evMap,
       );
-      final resp = await _proxy.stepCoaching(req);
+      final resp = await _deepSeek.chat(
+        messages: [
+          {'role': 'system', 'content': VeggiePrompts.system},
+          {'role': 'user', 'content': prompt},
+        ],
+        maxTokens: 500,
+        temperature: 0.8,
+      );
+      final text = resp['text'] as String? ?? '';
       return StepCoachingFeedback(
         step: step,
-        discovery: resp.feedbackText,
+        discovery: text,
         improvement: '',
         nextPrompt: '',
       );
