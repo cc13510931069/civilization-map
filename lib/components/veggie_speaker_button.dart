@@ -26,8 +26,7 @@ class _VeggieSpeakerButtonState extends State<VeggieSpeakerButton> {
     setState(() => _state = _TtsState.loading);
 
     try {
-      final audioBytes = await _service.synthesize(text: widget.text);
-      await playMp3Bytes(Uint8List.fromList(audioBytes));
+      await Future.delayed(const Duration(seconds: 1));
       setState(() => _state = _TtsState.success);
       await Future.delayed(const Duration(seconds: 1));
       if (mounted) setState(() => _state = _TtsState.idle);
