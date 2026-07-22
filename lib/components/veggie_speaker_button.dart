@@ -5,7 +5,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import '../services/edge_tts_service.dart';
 import '../theme/app_theme.dart';
 
 enum _TtsState { idle, loading, success, error }
@@ -20,13 +19,7 @@ class VeggieSpeakerButton extends StatefulWidget {
 
 class _VeggieSpeakerButtonState extends State<VeggieSpeakerButton> {
   _TtsState _state = _TtsState.idle;
-  final EdgeTtsService _service = EdgeTtsService();
 
-  @override
-  void dispose() {
-    _service.dispose();
-    super.dispose();
-  }
 
   Future<void> _synthesize() async {
     if (widget.text.isEmpty) return;
